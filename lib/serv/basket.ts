@@ -293,7 +293,7 @@ Output strictly valid JSON with this structure:
                 Authorization: `Bearer ${apiKey}`,
                 "Content-Type": "application/json",
               },
-              signal: AbortSignal.timeout(1800),
+              signal: AbortSignal.timeout(15000),
               body: JSON.stringify({
                 model: candidateModel,
                 messages: [
