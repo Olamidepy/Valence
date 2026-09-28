@@ -98,9 +98,10 @@ On **Robinhood Chain L2**, tokenized stocks are standard **ERC-20 Real-World Ass
 2. **Robinhood Chain Block Explorer (Blockscout)**: 
    View your exact on-chain token balances and transfers anytime at:
    `https://robinhoodchain.blockscout.com/address/<YOUR_WALLET_ADDRESS>`
-   Click on the **"Tokens (ERC-20)"** tab to inspect your tokenized equity tokens.
+   Click on the **"Token transfers (ERC-20)"** tab to inspect tokenized equity movements, and the **"Transactions"** tab to inspect native ETH vault deposits.
 3. **Inside Your MetaMask / Zerion Wallet**:
-   Switch your wallet network to **Robinhood Chain** (Chain ID: `4663`, RPC: `https://robinhood.api.pocket.network`). Import the tokenized stock contracts to view your equity share counts directly inside your self-custody wallet!
+   Switch your wallet network to **Robinhood Chain** (Chain ID: `4663`, RPC: `https://robinhood.api.pocket.network`). 
+   On the Valence Dashboard, simply click the **`🦊 + Wallet`** button on any asset card (e.g. NVDA, MSFT, TSM). MetaMask will automatically pop up with `wallet_watchAsset` and register the token directly in your wallet balance!
 
 ### 2. How do I know if the stock price is increasing?
 Valence protocol implements live price discovery and oracle synchronization:
@@ -110,10 +111,13 @@ Valence protocol implements live price discovery and oracle synchronization:
   - **Net Return ($USD and %)** with timeframe selectors (`1H`, `24H`, `1W`, `1M`, `1Y`, `ALL`).
   - **Individual Position PnL**: View real-time gain/loss percentages (e.g. `NVDA +39.0%`, `MSFT +3.66%`, `TSM +2.10%`) and price per tokenized share.
 
-### 3. How do I withdraw or liquidate back to cash/ETH?
-You maintain 100% self-custody over your assets at all times. You can exit via two mechanisms:
-- **Instant On-Chain Swap (DEX / UniversalRouter)**: Click **"Withdraw / Liquidate"** on the Dashboard. Valence routes your tokenized stock tokens back to native **ETH** or **USDC** on Robinhood Chain and deposits the funds directly into your MetaMask / Zerion wallet.
-- **Robinhood Brokerage Redemption**: Through Robinhood's institutional RWA off-ramp gateway, tokenized equities can be redeemed for physical fiat USD wired directly to a connected bank or Robinhood brokerage balance.
+### 3. How do I withdraw or liquidate back to cash/ETH when prices go up?
+You maintain 100% self-custody over your assets at all times. Here is how liquidation works step-by-step:
+1. **Stock Appreciation**: Suppose you bought 5.00 NVDA tokenized shares at `$225.07` ($1,125.35). NVIDIA rises to `$300.00`. Your position is now worth **$1,500.00** (`+$374.65` / `+33.3%`).
+2. **Click "Withdraw"**: Under **Your Assets** on the Dashboard, click **`Withdraw`** on the NVIDIA card.
+3. **Select Percentage**: Choose `25%`, `50%`, `75%`, or `Max (100%)`. The modal calculates the exact payout in Native ETH at the new higher price ($1,500 = ~0.5769 ETH).
+4. **Instant Liquidation**: Click **"Confirm & Liquidate to ETH"**. Valence routes the swap through the Robinhood Chain DEX (`UniversalRouter` at `0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD`) and sends the proceeds directly to your MetaMask wallet address!
+5. **Robinhood Brokerage Redemption**: Users can also redeem tokenized equities through Robinhood's institutional RWA off-ramp gateway to receive fiat USD wired directly to a connected bank account.
 
 ---
 
@@ -234,7 +238,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 |---|---|---|
 | **Valence Vault** | `0x71C43939626A3b8A88a8f1B5D34559828e184e8B` | Verified on Blockscout |
 | **Protocol Treasury** | `0x9B1E403561a329F3A79E228229F0531551a37c2a` | Verified on Blockscout |
+| **UniversalRouter** | `0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD` | Uniswap v3/v4 Execution |
+| **Permit2 Standard**| `0x000000000022D473030F116dDEE9F6B43aC78BA3` | Non-Custodial Allowance |
 | **Live Verified Tx** | `0x2c4e...8f1a` (-0.00003846 ETH live debit) | Confirmed on L2 |
+
+### 📈 Tokenized Equities Registry (Robinhood Chain L2)
+
+| Asset | Name | Contract Address | Oracle Feed |
+|---|---|---|---|
+| **NVDA** | NVIDIA Corp Tokenized | `0x3A2190A5a507E78e734FfCE38b3cE64648A2793B` | Chainlink (NVDA/USD) |
+| **TSM** | Taiwan Semiconductor Tokenized | `0x78921aE4601A94b0c79eE32cD6b880Fe34e7A5F4` | Chainlink (TSM/USD) |
+| **AMD** | Advanced Micro Devices Tokenized | `0x892a014C3dE9495147823eB5349B5B26E5101aB7` | Chainlink (AMD/USD) |
+| **MSFT** | Microsoft Corp Tokenized | `0x127bF1F58B868981446C9c0490E858546522c01E` | Chainlink (MSFT/USD) |
+| **AAPL** | Apple Inc Tokenized | `0x4981454593E94a02488825f385c9600a9F80f62c` | Chainlink (AAPL/USD) |
 
 ---
 
