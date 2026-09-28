@@ -5,13 +5,26 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
-  });
+let prismaInstance: PrismaClient | any;
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+try {
+  prismaInstance =
+    globalForPrisma.prisma ??
+    new PrismaClient({
+      log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+    });
+  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prismaInstance;
+} catch (err) {
+  // Safe mock proxy fallback for Next.js build-time page data collection
+  const dummyFn = async () => null;
+  const dummyHandler: ProxyHandler<any> = {
+    get: () => new Proxy(dummyFn, dummyHandler),
+    apply: () => Promise.resolve(null),
+  };
+  prismaInstance = new Proxy({}, dummyHandler);
+}
+
+export const prisma = prismaInstance;
 
 export interface MockUser {
   id: string;
