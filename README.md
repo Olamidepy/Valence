@@ -1,13 +1,7 @@
 <div align="center">
 
-# ⚡ Valence Protocol
+# Valence Protocol
 ### Autonomous, Guardrailed DCA Protocol for Tokenized Equities on Robinhood Chain
-
-[![Robinhood Chain](https://img.shields.io/badge/Robinhood_Chain-Mainnet_4663-00C805?style=for-the-badge&logo=ethereum&logoColor=white)](https://robinhoodchain.blockscout.com)
-[![Next.js 15](https://img.shields.io/badge/Next.js-15.0_App_Router-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-[![OpenServ AI](https://img.shields.io/badge/AI_Engine-OpenServ_SERV-7C3AED?style=for-the-badge)](https://openserv.ai)
-[![Permit2](https://img.shields.io/badge/Uniswap-Permit2_Non--Custodial-FF007A?style=for-the-badge)](https://github.com/Uniswap/permit2)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 <br />
 
@@ -19,34 +13,34 @@
   <strong>Institutional-grade algorithmic dollar-cost averaging into tokenized US equities (NVDA, TSM, AVGO, MSFT) powered by SERV reasoning agents, deterministic risk guardrails, and non-custodial Robinhood Chain L2 smart contracts.</strong>
 </p>
 
-[Explore Live Protocol](https://robinhoodchain.blockscout.com/address/0x71C43939626A3b8A88a8f1B5D34559828e184e8B) • [Audit Ledger](/activity) • [Architecture](#-system-architecture) • [Protocol Revenue](#-sustainable-protocol-revenue)
+[Explore Live Protocol](https://robinhoodchain.blockscout.com/address/0x71C43939626A3b8A88a8f1B5D34559828e184e8B) • [Audit Ledger](/activity) • [Architecture](#system-architecture) • [Protocol Revenue](#sustainable-protocol-revenue-model)
 
 </div>
 
 ---
 
-## 📑 Table of Contents
-- [Executive Overview](#-executive-overview)
-- [How It Works: Step-by-Step Flow](#-how-it-works-step-by-step-flow)
-- [Frequently Asked Questions (Investor & User Guide)](#-frequently-asked-questions-investor--user-guide)
+## Table of Contents
+- [Executive Overview](#executive-overview)
+- [How It Works: Step-by-Step Flow](#how-it-works-step-by-step-flow)
+- [Frequently Asked Questions (Investor & User Guide)](#frequently-asked-questions-investor--user-guide)
   - [1. Where do I view my tokenized stocks?](#1-where-do-i-view-my-tokenized-stocks)
   - [2. How do I know if the stock price is increasing?](#2-how-do-i-know-if-the-stock-price-is-increasing)
-  - [3. How do I withdraw or liquidate back to cash/ETH?](#3-how-do-i-withdraw-or-liquidate-back-to-casheth)
-- [System Architecture](#-system-architecture)
-- [Core Innovation Pillars](#-core-innovation-pillars)
+  - [3. How do I withdraw or liquidate back to cash/ETH?](#3-how-do-i-withdraw-or-liquidate-back-to-casheth-when-prices-go-up)
+- [System Architecture](#system-architecture)
+- [Core Innovation Pillars](#core-innovation-pillars)
   - [1. SERV & Guild AI Autonomous Reasoning](#1-serv--guild-ai-autonomous-reasoning)
   - [2. Deterministic Risk Guardrails](#2-deterministic-risk-guardrails)
   - [3. Non-Custodial Vault & Permit2](#3-non-custodial-vault--permit2)
   - [4. Sustainable Protocol Revenue Model](#4-sustainable-protocol-revenue-model)
-- [Robinhood Chain L2 Specifications](#-robinhood-chain-l2-specifications)
-- [Tech Stack](#-tech-stack)
-- [Getting Started Locally](#-getting-started-locally)
-- [Contract Addresses & Verification](#-contract-addresses--verification)
-- [License](#-license)
+- [Robinhood Chain L2 Specifications](#robinhood-chain-l2-specifications)
+- [Tech Stack](#tech-stack)
+- [Getting Started Locally](#getting-started-locally)
+- [Contract Addresses & Verification](#contract-addresses--verification)
+- [License](#license)
 
 ---
 
-## 🏛 Executive Overview
+## Executive Overview
 
 Traditional retail equity investing is encumbered by high management fees, custodial lock-in, and emotional market timing. On-chain investing solves custody but introduces volatility and lack of disciplined asset allocation.
 
@@ -54,7 +48,7 @@ Traditional retail equity investing is encumbered by high management fees, custo
 
 ---
 
-## 🔄 How It Works: Step-by-Step Flow
+## How It Works: Step-by-Step Flow
 
 ```
 ┌─────────────────────────┐
@@ -90,7 +84,7 @@ Traditional retail equity investing is encumbered by high management fees, custo
 
 ---
 
-## 💡 Frequently Asked Questions (Investor & User Guide)
+## Frequently Asked Questions (Investor & User Guide)
 
 ### 1. Where do I view my tokenized stocks?
 On **Robinhood Chain L2**, tokenized stocks are standard **ERC-20 Real-World Asset (RWA) tokens** mapped 1:1 to underlying US equities. You can view them in 3 transparent places:
@@ -101,7 +95,7 @@ On **Robinhood Chain L2**, tokenized stocks are standard **ERC-20 Real-World Ass
    Click on the **"Token transfers (ERC-20)"** tab to inspect tokenized equity movements, and the **"Transactions"** tab to inspect native ETH vault deposits.
 3. **Inside Your MetaMask / Zerion Wallet**:
    Switch your wallet network to **Robinhood Chain** (Chain ID: `4663`, RPC: `https://robinhood.api.pocket.network`). 
-   On the Valence Dashboard, simply click the **`🦊 + Wallet`** button on any asset card (e.g. NVDA, MSFT, TSM). MetaMask will automatically pop up with `wallet_watchAsset` and register the token directly in your wallet balance!
+   On the Valence Dashboard, simply click the **`+ Wallet`** button on any asset card (e.g. NVDA, MSFT, TSM). MetaMask will automatically pop up with `wallet_watchAsset` and register the token directly in your wallet balance!
 
 ### 2. How do I know if the stock price is increasing?
 Valence protocol implements live price discovery and oracle synchronization:
@@ -121,7 +115,7 @@ You maintain 100% self-custody over your assets at all times. Here is how liquid
 
 ---
 
-## 🧩 System Architecture
+## System Architecture
 
 ```
                                ┌────────────────────────────────┐
@@ -151,7 +145,7 @@ You maintain 100% self-custody over your assets at all times. Here is how liquid
 
 ---
 
-## ⚡ Core Innovation Pillars
+## Core Innovation Pillars
 
 ### 1. SERV & Guild AI Autonomous Reasoning
 Valence integrates **OpenServ AI** (`SERV` reasoning token) and **Guild AI multi-agent swarms**. Rather than relying on static robo-advisor algorithms, Valence agents analyze:
@@ -177,7 +171,7 @@ Valence is designed with built-in economic sustainability:
 
 ---
 
-## 🌐 Robinhood Chain L2 Specifications
+## Robinhood Chain L2 Specifications
 
 | Parameter | Value |
 |---|---|
@@ -194,7 +188,7 @@ Valence is designed with built-in economic sustainability:
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 15 (App Router, React 19, Server Components)
 - **Styling**: Vanilla Tailwind CSS, Glassmorphic Design System, Framer Motion
@@ -205,7 +199,7 @@ Valence is designed with built-in economic sustainability:
 
 ---
 
-## 🚀 Getting Started Locally
+## Getting Started Locally
 
 ### Prerequisites
 - Node.js 18.17+ or Node.js 20+
@@ -232,7 +226,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 📜 Contract Addresses & Verification
+## Contract Addresses & Verification
 
 | Contract | Address | Status |
 |---|---|---|
@@ -242,7 +236,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | **Permit2 Standard**| `0x000000000022D473030F116dDEE9F6B43aC78BA3` | Non-Custodial Allowance |
 | **Live Verified Tx** | `0x2c4e...8f1a` (-0.00003846 ETH live debit) | Confirmed on L2 |
 
-### 📈 Tokenized Equities Registry (Robinhood Chain L2)
+### Tokenized Equities Registry (Robinhood Chain L2)
 
 | Asset | Name | Contract Address | Oracle Feed |
 |---|---|---|---|
