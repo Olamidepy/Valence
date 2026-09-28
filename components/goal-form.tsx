@@ -770,7 +770,7 @@ export function GoalForm() {
                   }`}
                 >
                   <div className="font-semibold text-xs flex items-center justify-between">
-                    <span>⚡ Permit2 Signature</span>
+                    <span>Permit2 Signature</span>
                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">
                       Gasless Auth
                     </span>
