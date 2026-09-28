@@ -1,0 +1,132 @@
+// Valence Prisma Schema (PostgreSQL)
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Frequency {
+  WEEKLY
+  MONTHLY
+}
+
+enum TradeAction {
+  BUY
+  SELL
+  REBALANCE
+  REJECTED
+}
+
+enum TradeStatus {
+  PENDING
+  SIMULATED
+  CONFIRMED
+  FAILED
+}
+
+model User {
+  id              String            @id @default(uuid())
+  walletAddress   String            @unique
+  telegramChatId  String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  goals           Goal[]
+  trades          Trade[]
+  guardrailConfig GuardrailConfig?
+  alertSetting    AlertSetting?
+  feeAccruals     FeeAccrual[]
+}
+
+model Goal {
+  id              String            @id @default(uuid())
+  userId          String
+  amountUsd       Float
+  frequency       Frequency         @default(WEEKLY)
+  theme           String
+  active          Boolean           @default(true)
+  nextExecutionAt DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  baskets         Basket[]
+  trades          Trade[]
+}
+
+model Basket {
+  id              String            @id @default(uuid())
+  goalId          String
+  generatedAt     DateTime          @default(now())
+  rationale       String            // JSON stringified summary / SERV AI thought
+  wasTrimmed      Boolean           @default(false)
+
+  goal            Goal              @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  holdings        BasketHolding[]
+}
+
+model BasketHolding {
+  id              String            @id @default(uuid())
+  basketId        String
+  ticker          String
+  weightPct       Float
+  rationale       String?
+
+  basket          Basket            @relation(fields: [basketId], references: [id], onDelete: Cascade)
+}
+
+model GuardrailConfig {
+  id                    String      @id @default(uuid())
+  userId                String      @unique
+  maxHoldingWeightPct   Float       @default(35.0)
+  maxSlippageBps        Int         @default(50)
+  maxOraclePremiumBps   Int         @default(100)
+  minPoolLiquidityUsd   Float       @default(250000.0)
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Trade {
+  id              String            @id @default(uuid())
+  userId          String
+  goalId          String
+  ticker          String
+  action          TradeAction       @default(BUY)
+  amountUsd       Float
+  txHash          String?
+  status          TradeStatus       @default(CONFIRMED)
+  rejectionReason String?
+  executedAt      DateTime          @default(now())
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal            Goal              @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  feeAccrual      FeeAccrual?
+}
+
+model FeeAccrual {
+  id              String            @id @default(uuid())
+  userId          String
+  tradeId         String            @unique
+  feeUsd          Float
+  createdAt       DateTime          @default(now())
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trade           Trade             @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+}
+
+model AlertSetting {
+  id              String            @id @default(uuid())
+  userId          String            @unique
+  telegramEnabled Boolean           @default(true)
+  inAppEnabled    Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

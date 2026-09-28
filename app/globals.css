@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'MTN Brighter Sans Bold';
+  src: url('/fonts/MTN-BrighterSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --background: 280 6% 4.5%; /* #0c0b0c */
+    --foreground: 0 0% 93%;
+    --card: 280 6% 7.8%; /* #141315 */
+    --card-foreground: 0 0% 93%;
+    --popover: 280 6% 7.8%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 323 85% 62%; /* #ef4bac */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 275 8% 12%;
+    --secondary-foreground: 0 0% 93%;
+    --muted: 275 8% 12%;
+    --muted-foreground: 260 5% 62%;
+    --accent: 275 8% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 270 6% 15%; /* #262429 */
+    --input: 270 6% 15%;
+    --ring: 323 85% 62%;
+    --radius: 0.625rem;
+    --font-header: 'MTN Brighter Sans Bold', sans-serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    background-color: #0c0b0c;
+    color: #ededed;
+    font-family: var(--font-body);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+}
+
+/* Universal Rule: Completely remove all button shadow glows & guarantee zero-friction response */
+button,
+[role="button"],
+.btn-hero-gradient,
+.btn-valence-primary {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button:hover,
+[role="button"]:hover,
+.btn-hero-gradient:hover,
+.btn-valence-primary:hover {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled) {
+  transform: scale(0.97);
+  transition: transform 50ms ease-out !important;
+}
+
+/* Hero Pill Gradient Button - clean, minimal, zero friction */
+.btn-hero-gradient {
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+  color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: none !important;
+  transition: background-color 0.08s ease-out, transform 0.08s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.btn-hero-gradient:hover {
+  background: linear-gradient(135deg, #b366f8 0%, #9d3ff0 100%);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.btn-hero-gradient:active {
+  transform: scale(0.97);
+}
+
+/* Action Button - clean, minimal, zero friction */
+.btn-valence-primary {
+  background: #a855f7;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-weight: 500;
+  box-shadow: none;
+  transition: background-color 0.08s ease-out, transform 0.08s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.btn-valence-primary:hover {
+  background: #9333ea;
+  box-shadow: none;
+}
+
+.btn-valence-primary:active {
+  transform: scale(0.97);
+}
+
+/* Translational Motion Marquee Banner */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
