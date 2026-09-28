@@ -14,7 +14,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Icon from "@/components/icon";
-import { Search, Copy, ArrowRight } from "lucide-react";
+import { Search, Copy, ArrowRight, ChevronDown } from "lucide-react";
 import { StockLogo } from "@/components/stock-logo";
 import { TOKENIZED_STOCKS } from "@/lib/tokenized-stocks";
 import { Footer } from "@/components/footer";
@@ -328,8 +328,60 @@ const LIVE_AUDIT_LOG = [
   },
 ];
 
+const FAQ_ITEMS = [
+  {
+    category: "CUSTODY & SECURITY",
+    question: "Does Valence ever hold or take custody of my funds?",
+    answer:
+      "No. Valence is strictly non-custodial. All operations leverage Uniswap Labs' Permit2 standard. Your funds remain securely in your own wallet (MetaMask, Zerion, Coinbase Wallet) until the exact block an automated trade executes via decentralized liquidity pools on Robinhood Chain L2. You can revoke authorization instantly at any time with zero lockup."
+  },
+  {
+    category: "PORTFOLIO & ASSETS",
+    question: "Where do I view my tokenized stocks on Robinhood Chain?",
+    answer:
+      "Tokenized equities are standard ERC-20 Real-World Asset (RWA) tokens mapped 1:1 to underlying US shares. You can inspect them in 3 transparent places: (1) The Valence Portfolio Dashboard (/dashboard) with real-time valuations, cost basis, and asset weights; (2) Robinhood Chain Blockscout explorer under the 'Token transfers (ERC-20)' tab; and (3) Directly inside your MetaMask or Zerion wallet balances."
+  },
+  {
+    category: "PRICE & ORACLES",
+    question: "How do I know if the stock price is increasing?",
+    answer:
+      "Valence synchronizes with live 30-second institutional Chainlink decentralized oracle feeds reflecting NYSE/NASDAQ market sessions. On your Valence Dashboard, you can track live portfolio performance ($USD value vs total invested), aggregate net returns, and individual position PnL (e.g., NVDA +39.0%, MSFT +3.66%) with interactive timeframes (1H, 24H, 1W, 1M, 1Y, ALL)."
+  },
+  {
+    category: "WITHDRAWAL & OFF-RAMP",
+    question: "How do I withdraw or liquidate back to cash/ETH when prices go up?",
+    answer:
+      "You maintain 100% liquidity at all times. On the Dashboard under 'Your Assets', click 'Withdraw' on any stock card, choose your percentage (25%, 50%, 75%, or 100%), and confirm. Valence routes the swap through the Robinhood Chain DEX (UniversalRouter at 0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD) and deposits native ETH directly into your wallet. You can also redeem tokenized equities for fiat USD wired to your bank via Robinhood's institutional RWA gateway."
+  },
+  {
+    category: "EXPLORER & ON-CHAIN",
+    question: "Why did Blockscout show '0 Token Transfers' on my initial deposit?",
+    answer:
+      "Initial vault deposits are processed as Native ETH transactions. In blockchain explorers like Blockscout, native ETH transfers are indexed exclusively under the 'Transactions' tab (where your deposit is permanently verified). The 'Token transfers (ERC-20)' tab only indexes smart contract token minting/swaps when equities like NVDA or MSFT are purchased during a rebalance tranche."
+  },
+  {
+    category: "WALLET INTEGRATION",
+    question: "How do I import tokenized stocks into MetaMask or Zerion?",
+    answer:
+      "With one click! On your Valence Dashboard, simply click the '+ Wallet' button displayed on any asset card (NVDA, MSFT, TSM). Valence sends an EIP-747 wallet_watchAsset prompt to your wallet, automatically filling the verified contract address, symbol, and 18 decimals without requiring manual contract lookup."
+  },
+  {
+    category: "RISK & AI GUARDRAILS",
+    question: "What happens if the AI proposes an asset that breaches risk rules?",
+    answer:
+      "The deterministic mathematical gate intercepts the proposal before any on-chain swap can occur. If an asset exceeds the 40% concentration cap, it is automatically trimmed down, and the excess is re-allocated across diversified holdings. If slippage or oracle deviation is too high (> 0.5%), the trade is rejected entirely."
+  },
+  {
+    category: "PROTOCOL REVENUE",
+    question: "What protocol fees are charged and where do they go?",
+    answer:
+      "Valence charges a transparent 0.50% (50 bps) protocol fee strictly on successfully executed rebalance swaps. All collected fees are autonomously accumulated in the Protocol Treasury smart contract (0x9B1E403561a329F3A79E228229F0531551a37c2a) on Robinhood Chain, publicly auditable at /admin."
+  }
+];
+
 export default function DocumentationLandingPage() {
   const [activeSandboxIdx, setActiveSandboxIdx] = useState<number>(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [registryFilter, setRegistryFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
@@ -1125,46 +1177,44 @@ export default function DocumentationLandingPage() {
             Frequently Asked Questions
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-2">
-            Everything you need to know about custody, risk controls, and automated trading on Robinhood Chain L2.
+            Everything you need to know about self-custody, price tracking, on-chain liquidation, and risk controls on Robinhood Chain L2.
           </p>
         </div>
 
         <div className="space-y-3">
-          <Card className="border-border bg-card">
-            <CardHeader className="p-5">
-              <CardTitle className="text-sm font-bold">Does Valence ever hold or take custody of my funds?</CardTitle>
-              <CardDescription className="text-xs mt-1 leading-relaxed">
-                No. Valence is completely non-custodial. All operations use Uniswap Labs&apos; Permit2 standard. Your assets remain in your own wallet until the exact second an automated trade executes through decentralized liquidity pools. You can revoke authorization at any time.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardHeader className="p-5">
-              <CardTitle className="text-sm font-bold">What happens if the AI proposes an asset that breaches risk rules?</CardTitle>
-              <CardDescription className="text-xs mt-1 leading-relaxed">
-                The deterministic gate intercepts the proposal before any swap occurs. If an asset exceeds the 35% concentration cap, it is automatically trimmed down, and the excess is re-allocated across diversified holdings. If slippage or oracle deviation is too high, the trade is rejected entirely.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardHeader className="p-5">
-              <CardTitle className="text-sm font-bold">How are tokenized stocks priced and settled?</CardTitle>
-              <CardDescription className="text-xs mt-1 leading-relaxed">
-                Tokenized stocks are verified ERC-20 smart contracts deployed on Robinhood Chain L2. Real-time prices are continually validated using Chainlink decentralized oracle networks, ensuring pool pricing never deviates from underlying US stock markets.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardHeader className="p-5">
-              <CardTitle className="text-sm font-bold">What protocol fees are charged?</CardTitle>
-              <CardDescription className="text-xs mt-1 leading-relaxed">
-                Valence charges a transparent 0.50% (50 bps) protocol fee only on successfully executed rebalance trades. Idle capital, wallet connections, and guardrail validations incur zero protocol fees.
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          {FAQ_ITEMS.map((item, idx) => {
+            const isOpen = openFaq === idx;
+            return (
+              <Card
+                key={idx}
+                onClick={() => setOpenFaq(isOpen ? null : idx)}
+                className="border-border bg-card hover:border-[#ef4bac]/40 transition-all cursor-pointer overflow-hidden"
+              >
+                <CardHeader className="p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className="text-[10px] uppercase font-mono tracking-wider border-border/80 text-muted-foreground shrink-0">
+                        {item.category}
+                      </Badge>
+                      <CardTitle className="text-sm font-bold text-foreground text-left">
+                        {item.question}
+                      </CardTitle>
+                    </div>
+                    <ChevronDown
+                      className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${
+                        isOpen ? "rotate-180 text-[#ef4bac]" : ""
+                      }`}
+                    />
+                  </div>
+                  {isOpen && (
+                    <CardDescription className="text-xs mt-3 pt-3 border-t border-border/60 leading-relaxed text-muted-foreground text-left">
+                      {item.answer}
+                    </CardDescription>
+                  )}
+                </CardHeader>
+              </Card>
+            );
+          })}
         </div>
       </section>
 
