@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     "";
 
   const baseUrl = process.env.SERV_BASE_URL || "https://inference-api.openserv.ai/v1";
-  const model = req.nextUrl.searchParams.get("model") || process.env.SERV_MODEL || "gpt-5.4-mini";
+  const model = req.nextUrl.searchParams.get("model") || process.env.SERV_MODEL || "gpt-5.4-nano";
 
   const results: any = {
     apiKeyPrefix: apiKey ? apiKey.slice(0, 10) + "..." : "none",

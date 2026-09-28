@@ -279,9 +279,10 @@ Output strictly valid JSON with this structure:
           new Set(
             [
               process.env.SERV_MODEL,
+              "gpt-5.4-nano",
+              "gpt-6-luna",
               "gpt-5.4-mini",
               "claude-haiku-4.5",
-              "gpt-4o-mini",
             ].filter(Boolean) as string[]
           )
         );
