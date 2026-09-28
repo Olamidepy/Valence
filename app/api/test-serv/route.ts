@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     "";
 
   const baseUrl = process.env.SERV_BASE_URL || "https://inference-api.openserv.ai/v1";
-  const model = req.nextUrl.searchParams.get("model") || process.env.SERV_MODEL || "gpt-4o-mini";
+  const model = req.nextUrl.searchParams.get("model") || process.env.SERV_MODEL || "gpt-5.4-mini";
 
   const results: any = {
     apiKeyPrefix: apiKey ? apiKey.slice(0, 10) + "..." : "none",
@@ -34,7 +34,10 @@ export async function GET(req: NextRequest) {
       },
       body: JSON.stringify({
         model,
-        messages: [{ role: "user", content: "Say hello in JSON format: {\"greeting\": \"hello\"}" }],
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: "Say hello in JSON format: {\"greeting\": \"hello\"}" }
+        ],
         response_format: { type: "json_object" },
       }),
     });
