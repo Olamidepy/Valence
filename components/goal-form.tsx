@@ -52,6 +52,7 @@ interface PreviewData {
     approvedHoldings: BasketTableItem[];
     rejectedHoldings: Array<{ ticker: string; weightPct: number; reason: string }>;
   };
+  lastOpenServError?: string;
 }
 
 const PRESET_GOALS = [
@@ -582,6 +583,19 @@ export function GoalForm() {
                   )}
                 </div>
               </div>
+
+              {/* OpenServ Diagnostics if fallback occurred */}
+              {preview.servBasket.provider !== "OpenServ AI" && preview.lastOpenServError && (
+                <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+                  <div className="font-semibold flex items-center gap-1.5">
+                    <AlertCircle size={14} />
+                    <span>OpenServ API Feedback:</span>
+                  </div>
+                  <p className="mt-1 font-mono text-[11px] opacity-90 break-all">
+                    {preview.lastOpenServError}
+                  </p>
+                </div>
+              )}
 
               {/* Guardrail Reasons / Audit Callout */}
               {preview.guardrailResult.reasons.length > 0 && (

@@ -285,6 +285,7 @@ Output strictly valid JSON with this structure:
           )
         );
 
+        let openServLastError = "";
         for (const candidateModel of candidateModels) {
           try {
             const res = await fetch(`${openServBaseUrl}/chat/completions`, {
@@ -293,21 +294,20 @@ Output strictly valid JSON with this structure:
                 Authorization: `Bearer ${apiKey}`,
                 "Content-Type": "application/json",
               },
-              signal: AbortSignal.timeout(15000),
+              signal: AbortSignal.timeout(20000),
               body: JSON.stringify({
                 model: candidateModel,
                 messages: [
                   {
                     role: "system",
                     content:
-                      "You are SERV, the autonomous financial reasoning agent on Robinhood Chain. Output strictly JSON matching: { theme: string, rationale: string, explorationDetails: { macroThesis: string, riskAssessment: string, valuationRationale: string }, holdings: Array<{ ticker: string, weightPct: number, rationale: string }> }. Tickers allowed: NVDA, TSM, AMD, MSFT, AAPL, AVGO, PLTR, SMH. Sum of weights must equal 100.",
+                      "You are SERV, the autonomous financial reasoning agent on Robinhood Chain. Output strictly JSON matching: { theme: string, rationale: string, explorationDetails: { macroThesis: string, riskAssessment: string, valuationRationale: string }, holdings: Array<{ ticker: string, weightPct: number, rationale: string }> }. Tickers allowed: NVDA, TSM, AMD, MSFT, AAPL, AVGO, PLTR, SMH. Sum of weights must equal 100. Do not wrap in markdown or backticks.",
                   },
                   {
                     role: "user",
                     content: `Perform deep financial reasoning and construct an optimal tokenized equity basket for: "${goalText}"`,
                   },
                 ],
-                response_format: { type: "json_object" },
               }),
             });
 
@@ -315,17 +315,29 @@ Output strictly valid JSON with this structure:
               const osData = await res.json();
               const content = osData.choices?.[0]?.message?.content;
               if (content) {
-                rawProposal = JSON.parse(content);
-                providerUsed = "OpenServ AI";
-                break; // Successful inference!
+                try {
+                  rawProposal = JSON.parse(content);
+                } catch {
+                  const cleaned = content.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
+                  rawProposal = JSON.parse(cleaned);
+                }
+                if (rawProposal) {
+                  providerUsed = "OpenServ AI";
+                  break; // Successful inference!
+                }
               }
             } else {
               const errBody = await res.text();
+              openServLastError = `OpenServ ${res.status}: ${errBody}`;
               console.warn(`[OpenServ ${candidateModel} status ${res.status}]:`, errBody);
             }
-          } catch (modelErr) {
+          } catch (modelErr: any) {
+            openServLastError = `OpenServ error: ${modelErr?.message || modelErr}`;
             console.warn(`[OpenServ ${candidateModel} failed]:`, modelErr);
           }
+        }
+        if (!rawProposal && openServLastError) {
+          (globalThis as any).__lastOpenServError = openServLastError;
         }
       }
     } catch (apiError) {

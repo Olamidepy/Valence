@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
       servBasket,
       guardrailResult,
       requiresConfirmation: true,
+      lastOpenServError: (globalThis as any).__lastOpenServError || undefined,
     };
 
     return NextResponse.json(previewData, { status: 200 });
