@@ -16,6 +16,16 @@ export async function GET(req: NextRequest) {
   };
 
   try {
+    const modelsRes = await fetch(`${baseUrl}/models`, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    results.modelsStatus = modelsRes.status;
+    results.modelsList = await modelsRes.json();
+  } catch (err: any) {
+    results.modelsError = err.message || String(err);
+  }
+
+  try {
     const res = await fetch(`${baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
