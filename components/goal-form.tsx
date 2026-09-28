@@ -103,8 +103,13 @@ export function GoalForm() {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!theme.trim()) {
-      toast.error("Please enter a goal description");
+    if (theme.trim().length < 3) {
+      toast.error("Goal description must be at least 3 characters");
+      return;
+    }
+
+    if (!amountUsd || Number(amountUsd) < 0.01) {
+      toast.error("Please enter an amount of at least $0.01");
       return;
     }
 

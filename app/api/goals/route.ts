@@ -5,9 +5,9 @@ import { evaluateBasketGuardrails } from "@/lib/guardrails";
 import { mockDatabase } from "@/lib/db";
 
 const CreateGoalRequestSchema = z.object({
-  amountUsd: z.number().min(0.01, "Minimum investment amount is $0.01"),
+  amountUsd: z.coerce.number().min(0.01, "Minimum investment amount is $0.01").default(10),
   frequency: z.enum(["WEEKLY", "MONTHLY"]).default("WEEKLY"),
-  theme: z.string().min(3, "Goal theme description must be at least 3 characters"),
+  theme: z.string().min(3, "Goal description must be at least 3 characters"),
   apiKey: z.string().optional(),
 });
 
@@ -47,8 +47,9 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Error in POST /api/goals:", error);
     if (error instanceof z.ZodError) {
+      const firstMsg = error.errors[0]?.message || "Validation error";
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: firstMsg, details: error.errors },
         { status: 400 }
       );
     }
