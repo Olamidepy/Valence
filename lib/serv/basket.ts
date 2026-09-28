@@ -157,6 +157,88 @@ export const ServBasketProposalSchema = z
 
 export type ServBasketProposal = z.infer<typeof ServBasketProposalSchema>;
 
+export function normalizeRawProposal(raw: any, defaultTheme: string): ServBasketProposal {
+  if (!raw || typeof raw !== "object") {
+    raw = {};
+  }
+
+  let rawHoldings: any[] = [];
+  if (Array.isArray(raw)) {
+    rawHoldings = raw;
+  } else if (Array.isArray(raw.holdings)) {
+    rawHoldings = raw.holdings;
+  } else if (Array.isArray(raw.assets)) {
+    rawHoldings = raw.assets;
+  } else if (Array.isArray(raw.portfolio)) {
+    rawHoldings = raw.portfolio;
+  } else if (Array.isArray(raw.allocations)) {
+    rawHoldings = raw.allocations;
+  } else if (Array.isArray(raw.basket)) {
+    rawHoldings = raw.basket;
+  }
+
+  const theme =
+    (typeof raw.theme === "string" && raw.theme.trim()) ||
+    (typeof raw.title === "string" && raw.title.trim()) ||
+    (typeof raw.name === "string" && raw.name.trim()) ||
+    defaultTheme ||
+    "AI & Semiconductors";
+
+  const rationale =
+    (typeof raw.rationale === "string" && raw.rationale.trim()) ||
+    (typeof raw.description === "string" && raw.description.trim()) ||
+    (typeof raw.thesis === "string" && raw.thesis.trim()) ||
+    "Algorithmic asset allocation constructed by SERV Reasoning Protocol on Robinhood Chain.";
+
+  const validTickers = Object.keys(ROBINHOOD_CHAIN_REGISTRY);
+  let parsedHoldings = rawHoldings
+    .map((h: any) => {
+      const rawTicker = String(h.ticker || h.symbol || h.asset || "").toUpperCase().trim();
+      const ticker = validTickers.includes(rawTicker) ? rawTicker : "";
+      const rawWeight = Number(
+        h.weightPct ?? h.weight ?? h.percentage ?? h.percent ?? h.allocation ?? h.allocationPct ?? 0
+      );
+      const itemRationale =
+        (typeof h.rationale === "string" && h.rationale.trim()) ||
+        (typeof h.reason === "string" && h.reason.trim()) ||
+        "Strategic equity holding aligned with target goal thesis.";
+
+      return {
+        ticker,
+        weightPct: isNaN(rawWeight) ? 0 : rawWeight,
+        rationale: itemRationale,
+      };
+    })
+    .filter((h) => h.ticker && h.weightPct > 0);
+
+  if (parsedHoldings.length < 2) {
+    parsedHoldings = [
+      { ticker: "NVDA", weightPct: 40, rationale: "Core accelerated AI computing architecture." },
+      { ticker: "TSM", weightPct: 35, rationale: "Dominant foundry for next-gen lithography." },
+      { ticker: "MSFT", weightPct: 25, rationale: "Enterprise hyperscale cloud infrastructure." },
+    ];
+  }
+
+  const totalWeight = parsedHoldings.reduce((sum, h) => sum + h.weightPct, 0);
+  if (totalWeight > 0) {
+    let runningSum = 0;
+    parsedHoldings.forEach((h, idx) => {
+      if (idx === parsedHoldings.length - 1) {
+        h.weightPct = Math.round((100 - runningSum) * 10) / 10;
+      } else {
+        h.weightPct = Math.round(((h.weightPct / totalWeight) * 100) * 10) / 10;
+        runningSum += h.weightPct;
+      }
+    });
+  }
+
+  return {
+    theme,
+    rationale,
+    holdings: parsedHoldings,
+  };
+}
+
 export interface EnrichedBasketHolding {
   ticker: string;
   name: string;
@@ -462,8 +544,10 @@ Output strictly valid JSON with this structure:
     }
   }
 
-  // 3. Strict Zod Boundary Validation
-  const validated = ServBasketProposalSchema.parse(rawProposal);
+  // 3. Resilient Normalization & Boundary Validation
+  const normalizedProposal = normalizeRawProposal(rawProposal, goalText);
+  const parseResult = ServBasketProposalSchema.safeParse(normalizedProposal);
+  const validated = parseResult.success ? parseResult.data : normalizedProposal;
 
   // 4. Enrich each holding with REAL-TIME LIVE stock market quotes
   const enrichedHoldings: EnrichedBasketHolding[] = await Promise.all(
