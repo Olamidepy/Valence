@@ -5,15 +5,45 @@ import { evaluateBasketGuardrails } from "@/lib/guardrails";
 import { mockDatabase } from "@/lib/db";
 
 const CreateGoalRequestSchema = z.object({
-  amountUsd: z.coerce.number().min(0.01, "Minimum investment amount is $0.01").default(10),
-  frequency: z.enum(["WEEKLY", "MONTHLY"]).default("WEEKLY"),
-  theme: z.string().min(3, "Goal description must be at least 3 characters"),
+  amountUsd: z.coerce.number().optional().default(50),
+  frequency: z.enum(["WEEKLY", "MONTHLY"]).optional().default("WEEKLY"),
+  theme: z.string().optional().default("Invest in top AI semiconductor and cloud infrastructure"),
   apiKey: z.string().optional(),
 });
 
+export async function GET(req: NextRequest) {
+  try {
+    const theme =
+      req.nextUrl.searchParams.get("theme") ||
+      "Invest in top AI semiconductor and cloud infrastructure";
+    const apiKey = req.nextUrl.searchParams.get("key") || undefined;
+
+    const servBasket = await generateServBasket(theme, apiKey);
+    const guardrailResult = evaluateBasketGuardrails(
+      servBasket,
+      mockDatabase.guardrailConfig
+    );
+
+    return NextResponse.json({
+      status: "ok",
+      theme,
+      servBasket,
+      guardrailResult,
+      lastOpenServError: (globalThis as any).__lastOpenServError || undefined,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || String(error) }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    let body: any = {};
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
     const parsed = CreateGoalRequestSchema.parse(body);
 
     const customKey =
@@ -47,9 +77,9 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Error in POST /api/goals:", error);
     if (error instanceof z.ZodError) {
-      const firstMsg = error.errors[0]?.message || "Validation error";
+      const details = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
       return NextResponse.json(
-        { error: firstMsg, details: error.errors },
+        { error: details || "Validation error", details: error.errors },
         { status: 400 }
       );
     }
