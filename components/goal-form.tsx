@@ -403,9 +403,12 @@ export function GoalForm() {
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
                 <span className="text-[11px] text-muted-foreground mr-1">Presets:</span>
                 {PRESET_GOALS.map((preset) => (
-                  <button
+                  <Button
                     key={preset}
                     type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs font-normal text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setTheme(preset);
                       if (preset.includes("$0.20") || preset.includes("0.2")) setAmountUsd(0.2);
@@ -416,10 +419,9 @@ export function GoalForm() {
                       if (preset.includes("month")) setFrequency("MONTHLY");
                       if (preset.includes("week")) setFrequency("WEEKLY");
                     }}
-                    className="text-[11px] rounded-md border border-border/60 bg-secondary/40 px-2.5 py-1 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
                   >
                     {preset}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -445,20 +447,18 @@ export function GoalForm() {
                   />
                 </div>
                 {/* Fast Amount Pills */}
-                <div className="flex items-center gap-1.5 pt-0.5">
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                   {[0.2, 1, 10, 25, 50, 100].map((val) => (
-                    <button
+                    <Button
                       key={val}
                       type="button"
+                      variant={amountUsd === val ? "default" : "outline"}
+                      size="sm"
+                      className="h-7 px-2.5 font-mono text-xs"
                       onClick={() => setAmountUsd(val)}
-                      className={`text-[11px] font-mono px-2 py-0.5 rounded border transition-colors ${
-                        amountUsd === val
-                          ? "border-primary text-primary bg-primary/10"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
                     >
                       ${val < 1 ? val.toFixed(2) : val}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -523,9 +523,8 @@ export function GoalForm() {
             <Button
               type="submit"
               variant="default"
-              size="lg"
               disabled={isGenerating}
-              className="gap-2 font-semibold text-sm w-full sm:w-auto"
+              className="gap-2"
             >
               {isGenerating ? (
                 <>
@@ -533,10 +532,10 @@ export function GoalForm() {
                   <span>Reasoning via SERV AI...</span>
                 </>
               ) : (
-                <span className="flex items-center gap-1.5">
+                <>
                   <span>Propose Basket with SERV AI</span>
                   <ArrowRight size={14} />
-                </span>
+                </>
               )}
             </Button>
           </CardFooter>
@@ -547,46 +546,39 @@ export function GoalForm() {
       {preview && (
         <div className="space-y-6 animate-in fade-in-50 duration-300">
           <Card className="valence-card border-border/80 shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs font-semibold text-primary border-primary/30">
-                      SERV Proposal
-                    </Badge>
-                    <Badge variant="secondary" className="text-[10px] font-mono">
-                      {preview.servBasket.provider || "AI Reasoning"}
-                    </Badge>
-                    <h3 className="font-header text-lg font-bold text-foreground">
-                      {preview.servBasket.theme}
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-xs text-muted-foreground leading-relaxed max-w-2xl">
-                    {preview.servBasket.rationale}
-                  </p>
-                </div>
+            <CardHeader className="pb-4 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline">SERV Proposal</Badge>
+                <Badge variant="secondary" className="font-mono">
+                  {preview.servBasket.provider || "OpenServ AI"}
+                </Badge>
+                {preview.guardrailResult.status === "APPROVED" && (
+                  <Badge variant="success">
+                    <ShieldCheck size={12} />
+                    <span>Guardrails: APPROVED</span>
+                  </Badge>
+                )}
+                {preview.guardrailResult.status === "TRIMMED" && (
+                  <Badge variant="warning">
+                    <ShieldCheck size={12} />
+                    <span>Guardrails: AUTO-TRIMMED</span>
+                  </Badge>
+                )}
+                {preview.guardrailResult.status === "REJECTED" && (
+                  <Badge variant="destructive">
+                    <AlertCircle size={12} />
+                    <span>Guardrails: REJECTED</span>
+                  </Badge>
+                )}
+              </div>
 
-                {/* Guardrail Status Badge */}
-                <div>
-                  {preview.guardrailResult.status === "APPROVED" && (
-                    <Badge variant="success" className="gap-1.5 py-1 px-3 text-xs font-semibold">
-                      <ShieldCheck size={14} />
-                      Guardrails: APPROVED
-                    </Badge>
-                  )}
-                  {preview.guardrailResult.status === "TRIMMED" && (
-                    <Badge variant="warning" className="gap-1.5 py-1 px-3 text-xs font-semibold">
-                      <ShieldCheck size={14} />
-                      Guardrails: AUTO-TRIMMED
-                    </Badge>
-                  )}
-                  {preview.guardrailResult.status === "REJECTED" && (
-                    <Badge variant="destructive" className="gap-1.5 py-1 px-3 text-xs font-semibold">
-                      <AlertCircle size={14} />
-                      Guardrails: REJECTED
-                    </Badge>
-                  )}
-                </div>
+              <div>
+                <CardTitle className="text-xl">
+                  {preview.servBasket.theme}
+                </CardTitle>
+                <CardDescription className="mt-1 text-xs max-w-3xl leading-relaxed">
+                  {preview.servBasket.rationale}
+                </CardDescription>
               </div>
 
               {/* OpenServ Diagnostics if fallback occurred */}
@@ -673,11 +665,10 @@ export function GoalForm() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <Button
                   variant="outline"
                   onClick={() => setPreview(null)}
-                  className="text-xs"
                 >
                   Discard
                 </Button>
@@ -685,10 +676,10 @@ export function GoalForm() {
                   variant="default"
                   onClick={() => setShowConfirmModal(true)}
                   disabled={preview.guardrailResult.status === "REJECTED"}
-                  className="gap-2 text-xs font-semibold"
+                  className="gap-2"
                 >
-                  <Check size={14} />
-                  <span>Review &amp; Schedule &rarr;</span>
+                  <Check size={16} />
+                  <span>Review &amp; Schedule</span>
                 </Button>
               </div>
             </CardFooter>
