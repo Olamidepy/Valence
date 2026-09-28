@@ -45,18 +45,18 @@ export function BasketTable({ holdings, showDetails = true, totalAmountUsd }: Ba
   }
 
   return (
-    <div className="rounded-lg border border-border/70 overflow-hidden bg-card/60 backdrop-blur-sm">
+    <div className="rounded-lg border border-border/70 overflow-x-auto bg-card/60 backdrop-blur-sm">
       <Table>
         <TableHeader className="bg-secondary/40">
           <TableRow>
-            <TableHead className="w-[180px]">Asset</TableHead>
-            <TableHead className="w-[170px]">
+            <TableHead className="min-w-[130px] sm:w-[180px]">Asset</TableHead>
+            <TableHead className="min-w-[120px] sm:w-[170px]">
               {totalAmountUsd && totalAmountUsd > 0 ? "Weight & Allocation" : "Weight"}
             </TableHead>
             <TableHead className="hidden md:table-cell">SERV AI Rationale</TableHead>
             {showDetails && (
               <>
-                <TableHead className="text-right">Price</TableHead>
+                <TableHead className="text-right min-w-[70px]">Price</TableHead>
                 <TableHead className="text-right hidden sm:table-cell">24h</TableHead>
                 <TableHead className="text-right hidden lg:table-cell">Pool Depth</TableHead>
               </>

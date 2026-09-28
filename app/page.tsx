@@ -422,59 +422,59 @@ export default function DocumentationLandingPage() {
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 text-center">
 
           {/* Hero Title */}
-          <h1 className="font-hero text-4xl sm:text-6xl md:text-7xl font-medium tracking-tight text-foreground max-w-4xl mx-auto leading-[1.1]">
+          <h1 className="font-hero text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight text-foreground max-w-4xl mx-auto leading-[1.15]">
             Automated investing you can actually audit.
           </h1>
 
           {/* Hero Subtitle */}
-          <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
             Every trade Valence makes passes a hard risk check before it touches your money,
             and every buy, block, and reason is logged where you can see it.
           </p>
 
           {/* Hero Action Buttons - Clean & minimal, no glow */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/auth">
-              <button className="btn-hero-gradient px-7 py-3 text-sm font-medium flex items-center justify-center gap-2 cursor-pointer">
+          <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto px-4 sm:px-0">
+            <Link href="/auth" className="w-full sm:w-auto">
+              <button className="btn-hero-gradient px-7 py-3 text-sm font-medium flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto">
                 <span>Launch App</span>
                 <span className="text-base leading-none">↗</span>
               </button>
             </Link>
 
-            <a href="#architecture">
-              <button className="rounded-full px-6 py-3 bg-secondary hover:bg-secondary/80 border border-border text-foreground font-medium text-sm transition-colors cursor-pointer">
+            <a href="#architecture" className="w-full sm:w-auto">
+              <button className="rounded-full px-6 py-3 bg-secondary hover:bg-secondary/80 border border-border text-foreground font-medium text-sm transition-colors cursor-pointer w-full sm:w-auto">
                 Explore Architecture ↓
               </button>
             </a>
           </div>
 
           {/* Live Protocol Metric Ribbon - Strictly minimal shadcn Cards */}
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+          <div className="mt-10 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 max-w-4xl mx-auto">
             <Card className="border-border bg-card/90">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold font-mono text-foreground">4 / 4</div>
-                <div className="text-xs text-muted-foreground mt-1">Deterministic Gate Checks</div>
+              <CardContent className="p-3 sm:p-4 text-center">
+                <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">4 / 4</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground mt-1">Deterministic Gate Checks</div>
               </CardContent>
             </Card>
 
             <Card className="border-border bg-card/90">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold font-mono text-foreground">0 bps</div>
-                <div className="text-xs text-muted-foreground mt-1">Slippage Tolerance Violations</div>
+              <CardContent className="p-3 sm:p-4 text-center">
+                <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">0 bps</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground mt-1">Slippage Tolerance Violations</div>
               </CardContent>
             </Card>
 
             <Card className="border-border bg-card/90">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold font-mono text-foreground">100%</div>
-                <div className="text-xs text-muted-foreground mt-1">Cryptographic Audit Trails</div>
+              <CardContent className="p-3 sm:p-4 text-center">
+                <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">100%</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground mt-1">Cryptographic Audit Trails</div>
               </CardContent>
             </Card>
 
             <Card className="border-border bg-card/90">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold font-mono text-foreground">$50k+</div>
-                <div className="text-xs text-muted-foreground mt-1">Pool Liquidity Depth Floor</div>
+              <CardContent className="p-3 sm:p-4 text-center">
+                <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">$50k+</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground mt-1">Pool Liquidity Depth Floor</div>
               </CardContent>
             </Card>
           </div>
@@ -698,8 +698,8 @@ export default function DocumentationLandingPage() {
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs">
+            <div className="overflow-x-auto -mx-2 sm:mx-0">
+              <table className="w-full text-xs min-w-[560px]">
                 <thead>
                   <tr className="border-b border-border text-muted-foreground text-left">
                     <th className="pb-3 font-medium">Asset</th>

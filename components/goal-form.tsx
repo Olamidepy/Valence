@@ -61,6 +61,10 @@ const PRESET_GOALS = [
   "$50/week into AI & semiconductors",
   "$100/month into Hyperscale Cloud & Big Tech",
   "$25/week into Top Tokenized Equities",
+  "$75/week into Semiconductor Foundry Leaders",
+  "$200/month into Defensive Dividends & Cash Flow",
+  "$30/week into Pure-Play AI Hardware & Compute",
+  "$150/month into Custom Silicon & Hyperscale Cloud",
 ];
 
 export function GoalForm() {
@@ -411,13 +415,13 @@ export function GoalForm() {
                     className="h-7 text-xs font-normal text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setTheme(preset);
-                      if (preset.includes("$0.20") || preset.includes("0.2")) setAmountUsd(0.2);
-                      else if (preset.includes("$1 live")) setAmountUsd(1);
-                      else if (preset.includes("$100")) setAmountUsd(100);
-                      else if (preset.includes("$50")) setAmountUsd(50);
-                      else if (preset.includes("$25")) setAmountUsd(25);
-                      if (preset.includes("month")) setFrequency("MONTHLY");
-                      if (preset.includes("week")) setFrequency("WEEKLY");
+                      const match = preset.match(/\$(\d+(\.\d+)?)/);
+                      if (match) {
+                        const parsedVal = parseFloat(match[1]);
+                        if (!isNaN(parsedVal)) setAmountUsd(parsedVal);
+                      }
+                      if (/month/i.test(preset)) setFrequency("MONTHLY");
+                      else if (/week/i.test(preset)) setFrequency("WEEKLY");
                     }}
                   >
                     {preset}
@@ -524,7 +528,7 @@ export function GoalForm() {
               type="submit"
               variant="default"
               disabled={isGenerating}
-              className="gap-2"
+              className="gap-2 w-full sm:w-auto"
             >
               {isGenerating ? (
                 <>
@@ -645,30 +649,22 @@ export function GoalForm() {
               />
             </CardContent>
 
-            <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/60 pt-4">
+            <CardFooter className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t border-border/60 pt-4">
               {/* Fee Disclosure Summary */}
-              <div className="text-xs text-muted-foreground w-full sm:w-auto">
-                <span>Contribution: </span>
-                <span className="font-mono font-bold text-foreground">
-                  {formatCurrency(amountUsd)}
-                </span>
-                <span className="mx-2">&bull;</span>
-                <span>Management Fee (0.50%): </span>
-                <span className="font-mono text-foreground font-semibold">
-                  {formatCurrency(feeData.feeUsd)}
-                </span>
-                <span className="mx-2">&bull;</span>
-                <span>Net Swapped: </span>
-                <span className="font-mono text-emerald-400 font-bold">
-                  {formatCurrency(feeData.netAmountUsd)}
-                </span>
+              <div className="text-xs text-muted-foreground w-full sm:w-auto flex flex-wrap items-center gap-y-1 gap-x-2">
+                <span>Contribution: <strong className="font-mono text-foreground">{formatCurrency(amountUsd)}</strong></span>
+                <span className="hidden sm:inline">&bull;</span>
+                <span>Management Fee (0.50%): <strong className="font-mono text-foreground font-semibold">{formatCurrency(feeData.feeUsd)}</strong></span>
+                <span className="hidden sm:inline">&bull;</span>
+                <span>Net Swapped: <strong className="font-mono text-emerald-400 font-bold">{formatCurrency(feeData.netAmountUsd)}</strong></span>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto justify-end">
                 <Button
                   variant="outline"
                   onClick={() => setPreview(null)}
+                  className="w-full sm:w-auto"
                 >
                   Discard
                 </Button>
@@ -676,7 +672,7 @@ export function GoalForm() {
                   variant="default"
                   onClick={() => setShowConfirmModal(true)}
                   disabled={preview.guardrailResult.status === "REJECTED"}
-                  className="gap-2"
+                  className="gap-2 w-full sm:w-auto"
                 >
                   <Check size={16} />
                   <span>Review &amp; Schedule</span>
@@ -689,7 +685,7 @@ export function GoalForm() {
 
       {/* Fee-Disclosure Confirmation Dialog */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center gap-2 text-primary mb-1">
               <ShieldCheck size={18} />
@@ -740,7 +736,7 @@ export function GoalForm() {
               <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                 Execution Method
               </span>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setExecutionMethod("onchain")}
@@ -792,13 +788,13 @@ export function GoalForm() {
             </p>
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="gap-2 sm:gap-0 flex-col-reverse sm:flex-row">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setShowConfirmModal(false)}
               disabled={isConfirming}
-              className="text-xs"
+              className="text-xs w-full sm:w-auto"
             >
               Cancel
             </Button>
@@ -807,7 +803,7 @@ export function GoalForm() {
               size="sm"
               onClick={handleConfirm}
               disabled={isConfirming}
-              className="gap-2 text-xs font-semibold"
+              className="gap-2 text-xs font-semibold w-full sm:w-auto"
             >
               {isConfirming ? (
                 <>
@@ -941,12 +937,12 @@ export function GoalForm() {
             </div>
           )}
 
-          <DialogFooter className="gap-2 sm:gap-2 pt-2 flex-wrap sm:flex-nowrap">
+          <DialogFooter className="gap-2 sm:gap-2 pt-2 flex-col sm:flex-row">
             <Button
               variant="outline"
               size="sm"
               onClick={() => router.push("/admin")}
-              className="text-xs flex items-center gap-1.5 text-primary border-primary/40 hover:bg-primary/10"
+              className="text-xs flex items-center justify-center gap-1.5 text-primary border-primary/40 hover:bg-primary/10 w-full sm:w-auto"
             >
               <span>View Protocol Revenue</span>
               <ExternalLink size={12} />
@@ -955,7 +951,7 @@ export function GoalForm() {
               variant="outline"
               size="sm"
               onClick={() => router.push("/activity")}
-              className="text-xs flex items-center gap-1.5"
+              className="text-xs flex items-center justify-center gap-1.5 w-full sm:w-auto"
             >
               <span>Activity Log</span>
               <ExternalLink size={12} />
@@ -964,7 +960,7 @@ export function GoalForm() {
               variant="default"
               size="sm"
               onClick={() => router.push("/dashboard")}
-              className="text-xs font-semibold flex items-center gap-1.5"
+              className="text-xs font-semibold flex items-center justify-center gap-1.5 w-full sm:w-auto"
             >
               <span>Go to Dashboard</span>
               <ArrowRight size={13} />

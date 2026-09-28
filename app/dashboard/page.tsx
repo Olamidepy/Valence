@@ -541,7 +541,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
           <Link href="/activity">
             <Button
               variant="outline"
@@ -678,7 +678,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Timeframe Selector Buttons */}
-            <div className="flex items-center gap-1.5 pt-2 border-t border-white/10">
+            <div className="flex items-center gap-1.5 pt-2 border-t border-white/10 overflow-x-auto pb-1">
               {(["1H", "24H", "1W", "1M", "1Y", "ALL"] as const).map((tf) => {
                 const isSelected = timeRange === tf;
                 return (
@@ -983,7 +983,7 @@ export default function DashboardPage() {
 
           <div className="space-y-2 z-10">
             {/* Headline with Chain ID inline on right */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <div className="text-xl sm:text-2xl font-bold tracking-tight text-white font-header leading-tight">
                   Autonomous DCA
@@ -992,7 +992,7 @@ export default function DashboardPage() {
                   AI Proposes &bull; Deterministic Disposes
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-white/50 border border-white/10 px-2 py-0.5 rounded-full bg-white/5">
+              <span className="text-[10px] font-mono text-white/50 border border-white/10 px-2 py-0.5 rounded-full bg-white/5 shrink-0">
                 Robinhood Chain (4663)
               </span>
             </div>

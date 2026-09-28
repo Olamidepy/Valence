@@ -15,11 +15,11 @@ interface NavItem {
 }
 
 const DOCS_NAV_ITEMS: NavItem[] = [
-  { label: "Architecture", href: "/#architecture" },
-  { label: "Guardrails", href: "/#guardrails" },
-  { label: "Token Registry", href: "/#registry" },
-  { label: "Audit Proofs", href: "/#audit" },
-  { label: "Documentation", href: "/#docs" },
+  { label: "Architecture", href: "/#architecture", icon: "layers" },
+  { label: "Guardrails", href: "/#guardrails", icon: "shield-check" },
+  { label: "Token Registry", href: "/#registry", icon: "database" },
+  { label: "Audit Proofs", href: "/#audit", icon: "activity" },
+  { label: "Documentation", href: "/#docs", icon: "info" },
 ];
 
 const APP_NAV_ITEMS: NavItem[] = [
@@ -38,11 +38,11 @@ export function Navbar() {
   const navItems = isMarketing ? DOCS_NAV_ITEMS : APP_NAV_ITEMS;
 
   return (
-    <div className="sticky top-0 z-50 w-full px-4 sm:px-6 lg:px-8 pt-4 pb-2 pointer-events-none">
-      <header className="mx-auto max-w-5xl rounded-full border border-white/10 bg-[#14121a]/85 backdrop-blur-2xl px-5 sm:px-6 py-2 flex items-center justify-between shadow-2xl shadow-black/80 pointer-events-auto transition-all">
+    <div className="sticky top-0 z-50 w-full px-2.5 sm:px-6 lg:px-8 pt-3 sm:pt-4 pb-2 pointer-events-none">
+      <header className="mx-auto max-w-5xl rounded-full border border-white/10 bg-[#14121a]/85 backdrop-blur-2xl px-3 sm:px-6 py-2 flex items-center justify-between shadow-2xl shadow-black/80 pointer-events-auto transition-all">
         {/* Brand / Logo */}
-        <Link href="/" className="group flex items-center hover:opacity-95 transition-opacity">
-          <ValenceLogo size={22} />
+        <Link href="/" className="group flex items-center hover:opacity-95 transition-opacity shrink-0">
+          <ValenceLogo size={20} />
         </Link>
 
         {/* Center Nav Links - Generous spacing, not packed together */}
@@ -75,11 +75,11 @@ export function Navbar() {
         )}
 
         {/* Right Action Area */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {isMarketing ? (
             <div className="flex items-center gap-2">
               <Link href="/auth">
-                <button className="btn-hero-gradient px-4 py-1.5 rounded-full text-xs font-medium text-white flex items-center gap-1.5 cursor-pointer">
+                <button className="btn-hero-gradient px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-medium text-white flex items-center gap-1.5 cursor-pointer">
                   <span>Launch App</span>
                   <span className="text-xs">↗</span>
                 </button>
@@ -103,7 +103,7 @@ export function Navbar() {
 
       {/* Mobile Nav Bar */}
       {!isAuthPage && (
-        <div className="md:hidden mt-2 mx-auto max-w-sm rounded-full border border-white/10 bg-[#14121a]/95 backdrop-blur-2xl px-3 py-1.5 flex items-center justify-around pointer-events-auto">
+        <div className="md:hidden mt-2 mx-auto max-w-sm rounded-full border border-white/10 bg-[#14121a]/95 backdrop-blur-2xl px-2.5 py-1.5 flex items-center justify-around pointer-events-auto shadow-lg shadow-black/60 overflow-x-auto">
           {navItems.slice(0, 5).map((item) => {
             const isActive =
               item.href === "/"
@@ -117,18 +117,15 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "px-2.5 py-1 rounded-full text-xs transition-colors flex items-center gap-1",
+                  "px-2 sm:px-2.5 py-1 rounded-full text-xs transition-colors flex items-center gap-1 shrink-0",
                   isActive
                     ? "bg-white/15 text-white font-semibold"
                     : "text-white/60 hover:text-white hover:bg-white/5"
                 )}
                 title={item.label}
               >
-                {item.icon ? (
-                  <Icon name={item.icon} size={15} />
-                ) : (
-                  <span className="text-[11px] font-medium">{item.label}</span>
-                )}
+                {item.icon && <Icon name={item.icon} size={15} />}
+                <span className="text-[11px] font-medium hidden sm:inline">{item.label}</span>
               </Link>
             );
           })}

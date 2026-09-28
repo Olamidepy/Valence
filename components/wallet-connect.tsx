@@ -377,7 +377,7 @@ export function WalletConnect({ onAddressChange }: WalletConnectProps) {
         {isConnected && (
           <div className="flex items-center gap-1.5">
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium border ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-2 sm:px-2.5 py-1 text-xs font-medium border ${
                 isRobinhoodChain
                   ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
                   : "border-primary/30 bg-primary/10 text-primary"
@@ -388,7 +388,8 @@ export function WalletConnect({ onAddressChange }: WalletConnectProps) {
                   isRobinhoodChain ? "bg-emerald-400 animate-pulse" : "bg-primary"
                 }`}
               />
-              <span>{currentNetworkName}</span>
+              <span className="hidden sm:inline">{currentNetworkName}</span>
+              <span className="sm:hidden text-[10px] font-mono">RHC</span>
             </span>
             {!isRobinhoodChain && (
               <button
@@ -397,7 +398,8 @@ export function WalletConnect({ onAddressChange }: WalletConnectProps) {
                 title="Switch to Robinhood Chain (Chain ID: 4663)"
               >
                 <ArrowRightLeft size={11} />
-                <span>Switch to Robinhood</span>
+                <span className="hidden sm:inline">Switch to Robinhood</span>
+                <span className="sm:hidden text-[10px]">Switch</span>
               </button>
             )}
           </div>
